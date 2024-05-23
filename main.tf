@@ -51,7 +51,8 @@ resource "local_file" "azure_sp_json" {
 }
 
 data "http" "images" {
-  url = "https://raw.githubusercontent.com/openshift/installer/release-${local.major_version}/data/data/rhcos.json"
+  //url = "https://raw.githubusercontent.com/openshift/installer/release-${local.major_version}/data/data/rhcos.json"
+  url = "https://github.com/openshift/installer/blob/master/data/data/coreos/rhcos.json"
   request_headers = {
     Accept = "application/json"
   }
@@ -71,7 +72,8 @@ locals {
   azure_compute_subnet              = (var.azure_preexisting_network && var.azure_compute_subnet != null) ? var.azure_compute_subnet : "${local.cluster_id}-worker-subnet"
   public_ssh_key                    = var.openshift_ssh_key == "" ? tls_private_key.installkey[0].public_key_openssh : file(var.openshift_ssh_key)
   major_version                     = join(".", slice(split(".", var.openshift_version), 0, 2))
-  rhcos_image                       = lookup(lookup(jsondecode(data.http.images.body), "azure"), "url")
+//  rhcos_image                       = lookup(lookup(jsondecode(data.http.images.response_body), "azure"), "url")
+  //rhcos_image                       = lookup(lookup(jsondecode(azure.formats."vhd.gz".disk.location.response_body), "azure"), "url")
 }
 
 module "vnet" {
